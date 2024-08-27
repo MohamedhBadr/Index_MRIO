@@ -27,3 +27,6 @@ Total consumption based corruption footprints per region are displayed bellow. T
 Total Imported accounts with regards to corrupt consumption are displayed bellow.
 
 ![alt text](results/imported_footprint.png)
+
+Ratio of imported accounts to total corruption footprint is displayed bellow;
+![alt text](results/ratio.png)
