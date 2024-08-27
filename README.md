@@ -17,7 +17,7 @@ The results display how index data, when properly treated, can be transformed in
 ### An MRIO corruption extension
 With the corruption extension data we present an overview of the corruption extension which is calculated as a fraction of th total inputs. 
 
-![alt text](results/density_GHG.png)
+![alt text](results/density.png)
 
 ![alt text](results/totalinputs_extensions.png)
 
