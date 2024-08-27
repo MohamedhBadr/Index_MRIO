@@ -320,8 +320,12 @@ results = calc_corr()
 #%%
 #plot total corruption footprints
 results.columns = ['region','Corruption Footprint']
-results
+results = results.sort_values(by='region')
 
+
+
+
+#%%
 plt.figure(figsize=(18, 6))
 sns.barplot(x='region', y='Corruption Footprint', data=results, color='black')
 
@@ -379,7 +383,7 @@ plt.bar(r2, corruption_extension_grouped_merged['Total Inputs'], color='red', wi
 # Adding labels and titles
 plt.xlabel('Region', fontweight='bold')
 plt.ylabel('Values', fontweight='bold')
-plt.title('Corruption Footprint and Total Inputs by Region')
+plt.title('Corruption Extension and Total Inputs by Region')
 
 # Setting the x-ticks and labels
 plt.xticks(r1 + bar_width / 2, corruption_extension_grouped_merged.index)
@@ -400,4 +404,100 @@ plt.show()
 corruption_extension_grouped_merged['ratio'] = corruption_extension_grouped_merged['Corruption Extension']/corruption_extension_grouped_merged['Total Inputs']
 corruption_extension_grouped_merged.sort_values('ratio', ascending=True)
 
+# %%
+#imported corruption
+def calc_d_imp():
+    """
+    Calculates imported corruption
+    
+    """
+
+    regions = set(exio3.L.columns.get_level_values(level =0))
+    empty =[]
+    
+    for region in regions:
+        Y = exio3.Y[region].sum(axis=1)
+        Y.loc[region] = 0 
+        D = corruption_extension.T@exio3.L@Y
+        empty.append([region,float(D)])
+    
+    D_imp_results = pd.DataFrame(empty)
+    return D_imp_results
+
+results_imp = calc_d_imp()
+
+#%%
+results_imp.columns = ['region','Corruption Footprint']
+results_imp = results_imp.sort_values(by='region')
+
+plt.figure(figsize=(18, 6))
+sns.barplot(x='region', y='Corruption Footprint', data=results_imp, color='black')
+
+# Add titles and labels
+plt.title('Imported Corruption Footprint by Region')
+plt.xlabel('Region')
+plt.ylabel('Imported Corruption Footprint')
+
+# Add grid
+plt.grid(True, which='both', linestyle='--', linewidth=0.7)
+
+# Display the plot
+plt.show()
+
+# %%
+ratio = results_imp.merge(results, right_on= 'region',left_on= 'region', how  = 'left')
+ratio.columns = ['region','Imported','total']
+ratio['ratio'] = ratio['Imported']/ratio['total']
+ratio = ratio.sort_values('ratio')
+
+ratio = ratio.sort_values(by='ratio')
+
+plt.figure(figsize=(18, 6))
+sns.barplot(x='region', y='ratio', data=ratio, color='black')
+
+# Add titles and labels
+plt.title('Imported Corruption as a percentage of Total Corruption Footprint by Region')
+plt.xlabel('Region')
+plt.ylabel('Ratio of Imported corruption')
+
+# Add grid
+plt.grid(True, which='both', linestyle='--', linewidth=0.7)
+
+# Display the plot
+plt.show() 
+
+
+# %%
+corruption_extension.T
+
+# %%
+plt.figure(figsize=(10, 6))
+sns.kdeplot(corruption_extension['extension_value'], shade=True, color="black")
+
+# Adding titles and labels
+plt.title('Density Plot of Corruption Extension Values')
+plt.xlabel('Extension Value')
+plt.ylabel('Density')
+
+# Adding grid
+plt.grid(True)
+
+# Show the plot
+plt.show()
+# %%
+plt.figure(figsize=(10, 6))
+sns.kdeplot(exio3.impacts.F.loc['Land use Crop, Forest, Pasture'], shade=True, color="black")
+
+# Adding titles and labels
+plt.title('Density Plot of Land Use Extension Values')
+plt.xlabel('Extension Value')
+plt.ylabel('Density')
+
+# Adding grid
+plt.grid(True)
+
+# Show the plot
+plt.show()
+# %%
+exio3.impacts.F
 # %%
